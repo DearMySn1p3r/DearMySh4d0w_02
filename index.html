@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FEARLESS_MISSION_SYSTEM_v10.0</title>
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Noto+Sans+KR:wght@300;700;900&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Noto+Sans+KR:wght@300;400;700;900&family=Noto+Serif+KR:wght@300;400;700&display=swap">
     <style>
         @import url('https://cdn.jsdelivr.net/font-kopub/1.0/kopubbatang.css');
 
@@ -229,20 +229,20 @@
         #capture-area-wrapper {
             width: 100%; aspect-ratio: 1 / 1; position: relative;
             box-shadow: 0 15px 40px rgba(0,0,0,0.5); border-radius: 8px; overflow: hidden; background: #000;
-            border: 1px solid rgba(0, 242, 255, 0); /* 캡쳐 시 테두리 제거를 위해 0으로 시작 */
+            border: 1px solid rgba(0, 242, 255, 0); 
         }
-        
+
         #capture-area {
             width: 700px; height: 700px; background-color: #000;
             background-size: cover; background-position: center; position: absolute; top: 0; left: 0;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
-            box-sizing: border-box; background-image: url('「ARCH」 Quote Neutral A.png'); 
+            /* 초기 배경 파일명 .png 로 완벽 수정 */
+            box-sizing: border-box; background-image: url('「Fearless」 Quote Black Ver.png'); 
             padding: 100px; transform-origin: top left; 
         }
 
         #text-container { width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 2; position: relative; }
         
-        /* 스크린 테두리 코너 데코 (캡쳐 영역 내부) */
         .text-corner-top-left, .text-corner-top-right, .text-corner-bottom-left, .text-corner-bottom-right {
             position: absolute; width: 15px; height: 15px; border: 2px solid var(--neon-blue); opacity: 0.6; z-index: 5;
         }
@@ -251,9 +251,9 @@
         .text-corner-bottom-left { bottom: -20px; left: -20px; border-right: none; border-top: none; }
         .text-corner-bottom-right { bottom: -20px; right: -20px; border-left: none; border-top: none; }
 
-        .quote-main { width: 100%; transition: 0.1s; color: #fff; font-size: 24px; line-height: 1.5; font-family: 'Noto Serif KR', serif; text-align: center; word-break: keep-all; letter-spacing: 0px; white-space: pre-wrap; font-weight: 700; text-shadow: 0 0 10px rgba(255, 255, 255, 0.1); }
+        /* 발췌 글 볼드 처리(font-weight: 700) 제거, 얇게(400) 변경 */
+        .quote-main { width: 100%; transition: 0.1s; color: #fff; font-size: 24px; line-height: 1.5; font-family: 'Noto Serif KR', serif; text-align: center; word-break: keep-all; letter-spacing: 0px; white-space: pre-wrap; font-weight: 400; text-shadow: 0 0 10px rgba(255, 255, 255, 0.1); }
         
-        /* [수정] 아래 흰색 선 완전히 제거 (border-bottom 제거) */
         .quote-sub { width: 100%; margin-top: 30px; font-size: 18px; z-index: 2; font-family: inherit; opacity: 0.9; text-align: center; }
         
         .creator-name { font-weight: 300; }
@@ -290,8 +290,8 @@
         <div class="control-card">
             <div class="card-label">배경 작전 코드 (Theme)</div>
             <select id="themeSelect" onchange="updateTheme()">
-                <option value="「ARCH」 Quote Neutral A.png" data-color="#ffffff" data-logo="「ARCH」 Symbol Logo White Ver.png" selected>🖤 [NIGHT_OPERATIONS] Tactical Dark</option>
-                <option value="「ARCH」 Quote Neutral B.png" data-color="#1a1a1a" data-logo="「ARCH」 Symbol Logo Black Ver.png" data-creator="응구" data-character="Fearless">🤍 [DAY_BREAK] Tactical Light</option>
+                <option value="「Fearless」 Quote Black Ver.png" data-color="#ffffff" data-logo="「Fearless」 Symbol Logo White Ver.png" selected>🖤 [NIGHT_OPERATIONS] Tactical Dark</option>
+                <option value="「Fearless」 Quote White Ver.png" data-color="#1a1a1a" data-logo="「Fearless」 Symbol Logo Black Ver.png">🤍 [DAY_BREAK] Tactical Light</option>
             </select>
         </div>
 
@@ -373,7 +373,7 @@
                         <span class="creator-name">응구</span> | <span class="character-name">Fearless</span>
                     </div>
                 </div>
-                <img src="「ARCH」 Symbol Logo White Ver.png" id="logoDisplay" class="symbol-logo">
+                <img src="「Fearless」 Symbol Logo White Ver.png" id="logoDisplay" class="symbol-logo">
             </div>
         </div>
     </div>
@@ -499,30 +499,14 @@
             const select = document.getElementById('themeSelect');
             const selectedOption = select.options[select.selectedIndex];
             
-            // 데이터 속성 가져오기
             const bg = selectedOption.value;
             const color = selectedOption.dataset.color;
             const logo = selectedOption.dataset.logo;
             
-            // [수정] 데이터 속성 기반 제작자/캐릭터 자동 입력
-            const creator = selectedOption.dataset.creator;
-            const character = selectedOption.dataset.character;
-
-            // 배경, 글자색, 로고 업데이트
             document.getElementById('capture-area').style.backgroundImage = `url('${bg}')`;
             document.getElementById('display-main').style.color = color;
             document.getElementById('display-sub').style.color = color;
             document.getElementById('logoDisplay').src = logo;
-
-            // [수정] 제작자/캐릭터 입력 필드 업데이트
-            if (creator) {
-                document.getElementById('creatorInput').value = creator;
-                document.getElementById('creatorInput').dispatchEvent(new Event('input'));
-            }
-            if (character) {
-                document.getElementById('characterInput').value = character;
-                document.getElementById('characterInput').dispatchEvent(new Event('input'));
-            }
         }
 
         // 이미지 파일 다운로드
