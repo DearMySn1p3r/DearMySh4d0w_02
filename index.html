@@ -18,7 +18,7 @@
             --border-card: #dee2e6;
             --bg-input: #f9fafb;
             --active-bg: #111827;
-            --active-text: #00f2ff; 
+            --active-text: #000000; /* 라이트 모드에서도 네온 블루 위 글자는 검은색으로 */
             --accent: #00b8cc; 
         }
 
@@ -58,7 +58,7 @@
             right: 15px;
             background: rgba(17, 17, 17, 0.8);
             border: 1px solid var(--border-card);
-            color: var(--text-main);
+            color: #ffffff; /* 버튼 자체 텍스트는 항상 밝게 고정 */
             padding: 8px 16px;
             border-radius: 20px;
             cursor: pointer;
@@ -126,7 +126,6 @@
             box-shadow: 0 0 10px rgba(0, 242, 255, 0.2);
         }
         
-        /* Orbitron 버튼 가로로 꽉 차게 확장 */
         .f-orbitron { grid-column: 1 / -1; }
 
         input[type="text"], select, textarea {
@@ -151,7 +150,7 @@
             width: 32px; height: 32px; border-radius: 6px; cursor: pointer;
             font-size: 1.1rem; transition: 0.1s; display: flex; justify-content: center; align-items: center; padding: 0;
         }
-        .btn-adjust:hover { background: var(--active-bg); color: var(--active-text); border-color: var(--active-bg); }
+        .btn-adjust:hover { background: var(--active-bg); color: var(--neon-blue); border-color: var(--active-bg); }
         
         .value-display { font-weight: 700; color: var(--neon-blue); font-size: 1rem; min-width: 55px; text-align: center; }
         .value-display .unit { font-size: 0.75rem; color: var(--text-muted); margin-left: 2px; }
@@ -169,22 +168,18 @@
             font-size: 0.75rem; padding: 6px 12px; border-radius: 6px; cursor: pointer; transition: 0.2s;
             display: flex; align-items: center; gap: 4px; font-weight: 600;
         }
-        .btn-action-small:hover { background: var(--active-bg); color: var(--active-text); border-color: var(--active-bg); }
+        .btn-action-small:hover { background: var(--active-bg); color: var(--neon-blue); border-color: var(--active-bg); }
 
-        /* 저장/복사 버튼 그룹 */
         .action-btn-group { display: flex; gap: 8px; margin-top: 10px; }
         .btn-primary, .btn-secondary {
             padding: 14px 10px; border-radius: 10px; font-weight: 700; font-size: 0.9rem; cursor: pointer;
             font-family: 'Orbitron', 'Noto Sans KR', sans-serif; letter-spacing: 1px; transition: 0.2s;
         }
-        .btn-primary { flex: 2; background: var(--active-bg); color: var(--active-text); border: none; box-shadow: 0 0 15px rgba(0, 242, 255, 0.3); }
+        .btn-primary { flex: 2; background: var(--active-bg); color: var(--neon-blue); border: none; box-shadow: 0 0 15px rgba(0, 242, 255, 0.3); }
         .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 5px 20px rgba(0, 242, 255, 0.5); }
         .btn-secondary { flex: 1; background: var(--bg-input); color: var(--text-main); border: 1px solid var(--border-card); }
         .btn-secondary:hover { border-color: var(--neon-blue); background: var(--bg-card); color: var(--neon-blue); }
 
-        /* ----------------------------------
-            오른쪽: 미리보기 (반응형 1:1 캔버스)
-        ----------------------------------- */
         .preview-area {
             flex: 1 1 400px; 
             max-width: 700px;
@@ -199,7 +194,6 @@
             box-shadow: 0 15px 40px rgba(0,0,0,0.5); background: #000;
             border: 1px solid rgba(0, 242, 255, 0); 
         }
-        /* 다크모드 시 네온블루 라인(테두리) 제거 (border-color를 transparent로 수정) */
         body.dark-mode #capture-area-wrapper { box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6); border-color: transparent; }
 
         #capture-area {
@@ -212,14 +206,12 @@
 
         #text-container { width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 2; position: relative; }
 
-        /* 텍스트 스타일: 네온 효과 완전히 제거, 굵기 조절 */
         .quote-main { width: 100%; transition: 0.1s; font-size: 24px; line-height: 1.5; font-family: 'Noto Sans KR', sans-serif; text-align: center; word-break: keep-all; letter-spacing: 0px; white-space: pre-wrap; font-weight: 400; text-shadow: none; }
         .quote-sub { width: 100%; margin-top: 30px; font-size: 18px; z-index: 2; font-family: inherit; text-align: center; }
         
         .creator-name { font-weight: 400; }
         .character-name { font-weight: 700; text-shadow: none; }
         
-        /* 로고 스타일: 홀로그램 효과 제거 */
         .symbol-logo { position: absolute; bottom: 40px; right: 40px; width: 80px; opacity: 0.9; z-index: 2; }
         
         @media (max-width: 900px) { .preview-area { position: relative; top: 0; } }
@@ -337,14 +329,12 @@
     </div>
 
     <script>
-        // 전역 상태 설정
         window.state = {
             fontFamily: "'Noto Sans KR', sans-serif",
             fontSize: 24, lineHeight: 1.5, letterSpacing: 0, 
             textAlign: 'center', wordBreak: 'keep-all', paddingTopBottom: 100, paddingLeftRight: 100
         };
 
-        // 다크모드 토글 
         window.toggleDarkMode = function() {
             const body = document.body;
             const icon = document.getElementById('themeIcon');
@@ -357,7 +347,6 @@
             }
         };
 
-        // 반응형 캔버스 스케일링
         function applyScale() {
             const wrapper = document.getElementById('capture-area-wrapper');
             const area = document.getElementById('capture-area');
