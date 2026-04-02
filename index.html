@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FEARLESS_LOG_SYSTEM</title>
+    <title>FEARLESS_LOG_SYSTEM_v9.1</title>
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Noto+Sans+KR:wght@300;700&family=Noto+Serif+KR:wght@300;700&family=Nanum+Myeongjo:wght@400;700&family=Nanum+Gothic:wght@400&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Noto+Sans+KR:wght@300;700;900&family=Noto+Serif+KR:wght@300;700&family=Nanum+Myeongjo:wght@400;700&family=Nanum+Gothic:wght@400;700&display=swap">
     <style>
         @import url('https://cdn.jsdelivr.net/font-kopub/1.0/kopubbatang.css');
 
@@ -15,14 +15,14 @@
             --bg-card: #ffffff;
             --text-main: #111827;
             --text-muted: #6b7280;
-            --border-card: #e5e7eb;
+            --border-card: #dee2e6;
             --bg-input: #f9fafb;
             --active-bg: #111827;
             --active-text: #00f2ff; /* Fearless 네온 블루 포인트 */
             --accent: #00b8cc; /* 라이트모드용 약간 톤다운된 블루 */
         }
 
-        /* 다크 모드 (Fearless Theme) 설정 */
+        /* 다크 모드 (Fearless SF Theme) 설정 */
         body.dark-mode {
             --bg-body: #050505;
             --bg-card: #111111;
@@ -49,14 +49,15 @@
             gap: 30px;
             box-sizing: border-box;
             transition: background-color 0.3s, color 0.3s;
+            cursor: crosshair; /* SF 분위기 */
         }
 
-        /* 다크모드 토글 버튼 */
+        /* 다크모드 토글 버튼 (SF 스타일) */
         .theme-toggle-btn {
             position: fixed;
             top: 15px;
             right: 15px;
-            background: var(--bg-card);
+            background: rgba(17, 17, 17, 0.8);
             border: 1px solid var(--border-card);
             color: var(--text-main);
             padding: 8px 16px;
@@ -65,26 +66,27 @@
             font-family: 'Orbitron', sans-serif;
             font-weight: 700;
             font-size: 0.85rem;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
             transition: all 0.2s ease;
             z-index: 1000;
             display: flex;
             align-items: center;
             gap: 8px;
+            letter-spacing: 1px;
         }
-        .theme-toggle-btn:hover { border-color: var(--accent); color: var(--accent); }
+        .theme-toggle-btn:hover { border-color: var(--accent); color: var(--accent); box-shadow: 0 0 15px var(--accent); }
 
         /* ----------------------------------
-           왼쪽: 컨트롤 패널
+           왼쪽: 컨트롤 패널 (SF 전술 스크린 스타일)
         ----------------------------------- */
         .control-panel {
             flex: 1 1 350px;
             min-width: 0; 
             max-width: 480px;
             background: var(--bg-card);
-            border-radius: 16px;
+            border-radius: 12px;
             padding: 25px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             border: 1px solid var(--border-card);
             display: flex;
             flex-direction: column;
@@ -94,16 +96,28 @@
         }
 
         .panel-header { text-align: center; margin-bottom: 5px; }
-        .panel-header h1 { font-family: 'Orbitron', sans-serif; font-size: 1.2rem; letter-spacing: 3px; margin: 0; color: var(--text-main); }
-        .panel-header hr { width: 40px; border: none; border-top: 2px solid var(--accent); margin: 10px auto 0; }
+        .panel-header h1 { font-family: 'Orbitron', sans-serif; font-size: 1.2rem; letter-spacing: 3px; margin: 0; color: var(--text-main); text-shadow: 0 0 10px rgba(0, 242, 255, 0.2); }
+        .panel-header hr { width: 40px; border: none; border-top: 2px solid var(--accent); margin: 10px auto 0; box-shadow: 0 0 10px var(--accent); }
 
         .control-card {
             background: var(--bg-card); 
-            border-radius: 10px;
+            border-radius: 8px;
             padding: 15px;
             border: 1px solid var(--border-card);
             transition: background-color 0.3s, border-color 0.3s;
+            position: relative;
         }
+        /* SF적인 모서리 브래킷 */
+        .control-card::before, .control-card::after {
+            content: '';
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border: 1px solid var(--accent);
+            opacity: 0.3;
+        }
+        .control-card::before { top: 5px; left: 5px; border-right: none; border-bottom: none; }
+        .control-card::after { bottom: 5px; right: 5px; border-left: none; border-top: none; }
 
         .card-label {
             font-size: 0.8rem;
@@ -113,6 +127,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 1px;
         }
 
         /* 폰트 선택 그리드 */
@@ -124,6 +140,7 @@
         .btn-font:hover { border-color: var(--text-muted); color: var(--text-main); }
         .btn-font.active {
             border-color: var(--accent); color: var(--accent); background-color: rgba(0, 242, 255, 0.05); font-weight: 600;
+            box-shadow: 0 0 10px rgba(0, 242, 255, 0.1);
         }
 
         .f-notoserif { font-family: 'Noto Serif KR', serif; }
@@ -139,7 +156,7 @@
             background: var(--bg-input); color: var(--text-main); font-family: inherit; box-sizing: border-box; font-size: 0.95rem;
             transition: background-color 0.3s, color 0.3s, border-color 0.3s;
         }
-        input[type="text"]:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent); }
+        input[type="text"]:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 10px rgba(0, 242, 255, 0.2); }
         textarea { resize: vertical; min-height: 80px; }
 
         select {
@@ -156,7 +173,7 @@
             width: 30px; height: 30px; border-radius: 6px; cursor: pointer;
             font-size: 1.1rem; transition: 0.1s; display: flex; justify-content: center; align-items: center; padding: 0;
         }
-        .btn-adjust:hover { background: var(--active-bg); color: var(--active-text); border-color: var(--active-bg); }
+        .btn-adjust:hover { background: var(--active-bg); color: var(--active-text); border-color: var(--accent); }
         
         .value-display { font-weight: 700; color: var(--accent); font-size: 0.95rem; min-width: 50px; text-align: center; }
         .value-display .unit { font-size: 0.7rem; color: var(--text-muted); margin-left: 2px; }
@@ -179,17 +196,17 @@
         /* 버튼 그룹 */
         .action-btn-group { display: flex; gap: 8px; margin-top: 5px; }
         .btn-primary, .btn-secondary {
-            padding: 14px 10px; border-radius: 10px; font-weight: 700; font-size: 0.9rem; cursor: pointer;
-            font-family: 'Orbitron', 'Noto Sans KR', sans-serif; letter-spacing: 0.5px; transition: all 0.2s ease;
+            padding: 14px 10px; border-radius: 10px; font-weight: 700; font-size: 0.95rem; cursor: pointer;
+            font-family: 'Orbitron', 'Noto Sans KR', sans-serif; letter-spacing: 1px; transition: all 0.2s ease;
         }
-        .btn-primary { flex: 2; background: var(--active-bg); color: var(--active-text); border: 1px solid var(--active-bg); }
-        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0, 242, 255, 0.2); border-color: var(--accent); }
+        .btn-primary { flex: 2; background: var(--active-bg); color: var(--active-text); border: 1px solid var(--accent); box-shadow: 0 0 15px rgba(0, 242, 255, 0.1); }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 5px 20px rgba(0, 242, 255, 0.3); border-color: var(--accent); }
         
         .btn-secondary { flex: 1; background: var(--bg-input); color: var(--text-main); border: 1px solid var(--border-card); }
         .btn-secondary:hover { border-color: var(--accent); background: var(--bg-card); color: var(--accent); }
 
         /* ----------------------------------
-           오른쪽: 미리보기 (반응형 1:1 캔버스)
+           오른쪽: 미리보기 (반응형 1:1 캔버스, SF 연출)
         ----------------------------------- */
         .preview-area {
             flex: 1 1 350px; 
@@ -205,27 +222,53 @@
             width: 100%;
             aspect-ratio: 1 / 1;
             position: relative;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.1);
             border-radius: 8px;
             overflow: hidden;
             background: #fff;
+            border: 1px solid rgba(0, 242, 255, 0); /* 라이트모드 기본 */
         }
-        body.dark-mode #capture-area-wrapper { box-shadow: 0 20px 50px rgba(0, 242, 255, 0.1); }
+        body.dark-mode #capture-area-wrapper { box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6); border-color: var(--accent); }
+
+        /* SF 연출: 전술 스크린 스캔라인 Overlay */
+        #capture-area-wrapper::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: repeating-linear-gradient(0deg, rgba(0, 242, 255, 0.015) 0px, rgba(0, 242, 255, 0.015) 1px, transparent 1px, transparent 3px);
+            pointer-events: none; z-index: 10;
+        }
 
         #capture-area {
             width: 700px; height: 700px; background-color: #fff;
             background-size: cover; background-position: center; position: absolute; top: 0; left: 0;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
-            box-sizing: border-box; background-image: url('「Fearless」 Quote White Ver.jpg'); 
+            box-sizing: border-box; 
+            /* 이미지 파일 확장자 수정 완료 (JPEG) */
+            background-image: url('「Fearless」 Quote Black Ver.jpg'); 
             padding: 100px; transform-origin: top left; 
         }
 
-        #text-container { width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 2; }
-        .quote-main { width: 100%; transition: all 0.1s ease; color: #1a1a1a; font-size: 24px; line-height: 1.5; font-family: 'Noto Sans KR', sans-serif; text-align: center; word-break: keep-all; letter-spacing: 0px; white-space: pre-wrap; }
-        .quote-sub { width: 100%; margin-top: 30px; font-size: 18px; z-index: 2; font-family: inherit; opacity: 0.9; text-align: center; }
-        .creator-name { font-weight: 300; }
-        .character-name { font-weight: 700; }
-        .symbol-logo { position: absolute; bottom: 40px; right: 40px; width: 80px; opacity: 0.9; z-index: 2; }
+        #text-container { width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 2; position: relative; }
+        
+        /* 스크린 테두리 코너 브래킷 (전술 디스플레이 느낌) */
+        .text-corner-top-left, .text-corner-top-right, .text-corner-bottom-left, .text-corner-bottom-right {
+            position: absolute;
+            width: 15px; height: 15px;
+            border: 2px solid var(--active-bg);
+            opacity: 0.6;
+            z-index: 5;
+        }
+        .text-corner-top-left { top: -20px; left: -20px; border-right: none; border-bottom: none; }
+        .text-corner-top-right { top: -20px; right: -20px; border-left: none; border-bottom: none; }
+        .text-corner-bottom-left { bottom: -20px; left: -20px; border-right: none; border-top: none; }
+        .text-corner-bottom-right { bottom: -20px; right: -20px; border-left: none; border-top: none; }
+
+        .quote-main { width: 100%; transition: all 0.1s ease; color: #f8f9fa; font-size: 24px; line-height: 1.5; font-family: 'Noto Serif KR', serif; text-align: center; word-break: keep-all; letter-spacing: 0px; white-space: pre-wrap; font-weight: 700; }
+        .quote-sub { width: 100%; margin-top: 30px; font-size: 18px; z-index: 2; font-family: inherit; opacity: 0.9; text-align: center; font-weight: bold; }
+        .creator-name { font-weight: 400; font-family: 'Orbitron', sans-serif; }
+        .character-name { font-weight: 700; font-family: 'Pretendard', sans-serif; font-weight: 900; color: var(--active-bg); text-shadow: 0 0 10px rgba(0, 242, 255, 0.4); }
+        
+        .symbol-logo { position: absolute; bottom: 40px; right: 40px; width: 80px; opacity: 0.9; z-index: 2; filter: drop-shadow(0 0 5px rgba(0, 242, 255, 0.3)); }
         
         @media (max-width: 900px) { 
             .preview-area { position: relative; top: 0; margin-top: 10px; }
@@ -247,11 +290,11 @@
         <div class="control-card">
             <div class="card-label">텍스트 스타일 (Font)</div>
             <div class="font-grid" id="fontToggleGroup">
-                <button class="btn-font f-notoserif" onclick="setFont('\'Noto Serif KR\', serif', this)">Noto Serif</button>
+                <button class="btn-font f-notoserif active" onclick="setFont('\'Noto Serif KR\', serif', this)">Noto Serif</button>
                 <button class="btn-font f-kopub" onclick="setFont('\'KoPub Batang\', \'KoPubBatang\', serif', this)">KoPub 바탕</button>
                 <button class="btn-font f-myeongjo" onclick="setFont('\'Nanum Myeongjo\', serif', this)">나눔명조</button>
                 <button class="btn-font f-pretendard" onclick="setFont('\'Pretendard\', sans-serif', this)">Pretendard</button>
-                <button class="btn-font f-notosans active" onclick="setFont('\'Noto Sans KR\', sans-serif', this)">Noto Sans</button>
+                <button class="btn-font f-notosans" onclick="setFont('\'Noto Sans KR\', sans-serif', this)">Noto Sans</button>
                 <button class="btn-font f-gothic" onclick="setFont('\'Nanum Gothic\', sans-serif', this)">나눔고딕</button>
                 <button class="btn-font f-orbitron" onclick="setFont('\'Orbitron\', sans-serif', this)">Orbitron (Sci-Fi)</button>
             </div>
@@ -260,8 +303,8 @@
         <div class="control-card">
             <div class="card-label">배경 테마 (Theme)</div>
             <select id="themeSelect" onchange="updateTheme()">
-                <option value="「Fearless」 Quote Black Ver.jpg" data-color="#ffffff" selected>🖤 Fearless (Dark Theme)</option>
-                <option value="「Fearless」 Quote White Ver.jpg" data-color="#1a1a1a">🤍 Fearless (Light Theme)</option>
+                <option value="「Fearless」 Quote Black Ver.jpg" data-color="#ffffff" selected>🖤 Fearless (Tactical Dark)</option>
+                <option value="「Fearless」 Quote White Ver.jpg" data-color="#1a1a1a">🤍 Fearless (Tactical Light)</option>
             </select>
         </div>
 
@@ -315,7 +358,7 @@
                 발췌 내용
                 <button class="btn-action-small" onclick="toggleQuotes()">" " ⇄ “ ” 변환</button>
             </div>
-            <textarea id="mainInput" oninput="updateText()">“두려움을 모르는 자들이 걷는 최전선. 부서진 이성을 잇는 것은 오직 당신의 닿음뿐입니다.”</textarea>
+            <textarea id="mainInput" oninput="updateText()">“뼈를 삼키고, 살을 불태우며, 숨을 이어. 너에게 내일을 약속하지.”</textarea>
             <div style="display:flex; gap:10px; margin-top:10px;">
                 <input type="text" id="creatorInput" placeholder="제작자명" oninput="updateText()" value="Fearless" style="flex:1;">
                 <input type="text" id="characterInput" placeholder="캐릭터명 (자동 굵게)" oninput="updateText()" value="AGENT" style="flex:1.5;">
@@ -332,7 +375,12 @@
         <div id="capture-area-wrapper">
             <div id="capture-area">
                 <div id="text-container">
-                    <div class="quote-main" id="display-main">“두려움을 모르는 자들이 걷는 최전선. 부서진 이성을 잇는 것은 오직 당신의 닿음뿐입니다.”</div>
+                    <div class="text-corner-top-left"></div>
+                    <div class="text-corner-top-right"></div>
+                    <div class="text-corner-bottom-left"></div>
+                    <div class="text-corner-bottom-right"></div>
+                    
+                    <div class="quote-main" id="display-main">“뼈를 삼키고, 살을 불태우며, 숨을 이어. 너에게 내일을 약속하지.”</div>
                     <div class="quote-sub" id="display-sub">
                         <span class="creator-name">Fearless</span> | <span class="character-name">AGENT</span>
                     </div>
@@ -343,9 +391,9 @@
     </div>
 
     <script>
-        // 전역 상태 설정
+        // 전역 상태 설정 (기본 폰트는 Noto Serif KR로 시작)
         window.state = {
-            fontFamily: "'Noto Sans KR', sans-serif",
+            fontFamily: "'Noto Serif KR', serif",
             fontSize: 24, lineHeight: 1.5, letterSpacing: 0, 
             textAlign: 'center', wordBreak: 'keep-all', paddingTopBottom: 100, paddingLeftRight: 100
         };
@@ -479,7 +527,7 @@
             document.getElementById('display-main').style.color = color;
             document.getElementById('display-sub').style.color = color;
 
-            // Fearless 배경에 맞는 로고 매칭
+            // Fearless 테마별 배경(JPEG) 및 로고(PNG) 매칭 수정 완료
             if(bg === '「Fearless」 Quote White Ver.jpg') {
                 logo.src = '「Fearless」 Symbol Logo Black Ver.png';
             } else {
@@ -554,7 +602,7 @@
             });
         };
 
-        // 초기 실행 (Fearless 테마에 맞게 다크모드 기본 적용, 테마 업데이트)
+        // 초기 실행 (다크모드 기본, Fearless 테마 적용)
         updateStyle(); 
         updateTheme(); 
         updateText();
