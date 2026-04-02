@@ -125,6 +125,9 @@
             border-color: var(--neon-blue); color: var(--active-text); background-color: var(--neon-blue); font-weight: 600;
             box-shadow: 0 0 10px rgba(0, 242, 255, 0.2);
         }
+        
+        /* Orbitron 버튼 가로로 꽉 차게 확장 */
+        .f-orbitron { grid-column: 1 / -1; }
 
         input[type="text"], select, textarea {
             width: 100%; padding: 12px; border-radius: 6px; border: 1px solid var(--border-card);
@@ -180,7 +183,7 @@
         .btn-secondary:hover { border-color: var(--neon-blue); background: var(--bg-card); color: var(--neon-blue); }
 
         /* ----------------------------------
-           오른쪽: 미리보기 (반응형 1:1 캔버스)
+            오른쪽: 미리보기 (반응형 1:1 캔버스)
         ----------------------------------- */
         .preview-area {
             flex: 1 1 400px; 
@@ -196,7 +199,8 @@
             box-shadow: 0 15px 40px rgba(0,0,0,0.5); background: #000;
             border: 1px solid rgba(0, 242, 255, 0); 
         }
-        body.dark-mode #capture-area-wrapper { box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6); border-color: var(--accent); }
+        /* 다크모드 시 네온블루 라인(테두리) 제거 (border-color를 transparent로 수정) */
+        body.dark-mode #capture-area-wrapper { box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6); border-color: transparent; }
 
         #capture-area {
             width: 700px; height: 700px; background-color: #000;
