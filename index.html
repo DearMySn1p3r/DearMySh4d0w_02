@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FEARLESS_MISSION_SYSTEM_v10.0</title>
+    <title>FEARLESS_MISSION_SYSTEM_v10.1</title>
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Noto+Sans+KR:wght@300;400;700;900&family=Noto+Serif+KR:wght@300;400;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Noto+Sans+KR:wght@300;400;700;900&family=Noto+Serif+KR:wght@300;400;700&family=Nanum+Myeongjo:wght@400;700&family=Nanum+Gothic:wght@400;700&display=swap">
     <style>
         @import url('https://cdn.jsdelivr.net/font-kopub/1.0/kopubbatang.css');
 
@@ -47,43 +47,6 @@
             transition: 0.3s;
             overflow-x: hidden;
             cursor: crosshair; /* SF 분위기 */
-        }
-
-        /* ----------------------------------
-           직접 캡쳐 모드 (UI 숨김)
-        ----------------------------------- */
-        body.capture-mode .control-panel {
-            display: none !important;
-        }
-        
-        body.capture-mode {
-            align-items: center; /* 세로 중앙 정렬 */
-            padding: 0;
-        }
-
-        #exitCaptureBtn {
-            display: none;
-            position: fixed;
-            top: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 9999;
-            padding: 12px 24px;
-            background: var(--danger-red);
-            color: white;
-            border: none;
-            border-radius: 30px;
-            font-weight: 700;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(255, 62, 62, 0.4);
-            font-family: 'Noto Sans KR', sans-serif;
-            transition: 0.2s;
-            font-size: 14px;
-        }
-        #exitCaptureBtn:hover { background: #ff6b81; transform: translateX(-50%) translateY(-2px); }
-        
-        body.capture-mode #exitCaptureBtn {
-            display: block;
         }
 
         /* ----------------------------------
@@ -198,11 +161,11 @@
         }
         .btn-action-small:hover { background: var(--active-bg); color: var(--active-text); border-color: var(--active-bg); }
 
-        /* 저장/복사/수동캡쳐 버튼 그룹 */
+        /* 저장/복사 버튼 그룹 */
         .action-btn-group { display: flex; gap: 8px; margin-top: 10px; }
         .btn-primary, .btn-secondary {
-            padding: 14px 10px; border-radius: 10px; font-weight: 700; font-size: 0.9rem; cursor: pointer;
-            font-family: var(--font-main); letter-spacing: 1px; transition: 0.2s;
+            padding: 16px 10px; border-radius: 10px; font-weight: 700; font-size: 0.95rem; cursor: pointer;
+            font-family: 'Orbitron', 'Noto Sans KR', sans-serif; letter-spacing: 1px; transition: 0.2s;
         }
         .btn-primary {
             flex: 1.5; background: var(--active-bg); color: var(--active-text); border: none; box-shadow: 0 0 15px rgba(0, 242, 255, 0.3);
@@ -236,23 +199,14 @@
             width: 700px; height: 700px; background-color: #000;
             background-size: cover; background-position: center; position: absolute; top: 0; left: 0;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
-            /* 초기 배경 파일명 .png 로 완벽 수정 */
             box-sizing: border-box; background-image: url('「Fearless」 Quote Black Ver.png'); 
             padding: 100px; transform-origin: top left; 
         }
 
         #text-container { width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 2; position: relative; }
         
-        .text-corner-top-left, .text-corner-top-right, .text-corner-bottom-left, .text-corner-bottom-right {
-            position: absolute; width: 15px; height: 15px; border: 2px solid var(--neon-blue); opacity: 0.6; z-index: 5;
-        }
-        .text-corner-top-left { top: -20px; left: -20px; border-right: none; border-bottom: none; }
-        .text-corner-top-right { top: -20px; right: -20px; border-left: none; border-bottom: none; }
-        .text-corner-bottom-left { bottom: -20px; left: -20px; border-right: none; border-top: none; }
-        .text-corner-bottom-right { bottom: -20px; right: -20px; border-left: none; border-top: none; }
-
-        /* 발췌 글 볼드 처리(font-weight: 700) 제거, 얇게(400) 변경 */
-        .quote-main { width: 100%; transition: 0.1s; color: #fff; font-size: 24px; line-height: 1.5; font-family: 'Noto Serif KR', serif; text-align: center; word-break: keep-all; letter-spacing: 0px; white-space: pre-wrap; font-weight: 400; text-shadow: 0 0 10px rgba(255, 255, 255, 0.1); }
+        /* 발췌 글 볼드 처리 제거 (font-weight: 400 고정) */
+        .quote-main { width: 100%; transition: 0.1s; color: #fff; font-size: 24px; line-height: 1.5; font-family: 'Noto Sans KR', sans-serif; text-align: center; word-break: keep-all; letter-spacing: 0px; white-space: pre-wrap; font-weight: 400; text-shadow: 0 0 10px rgba(255, 255, 255, 0.1); }
         
         .quote-sub { width: 100%; margin-top: 30px; font-size: 18px; z-index: 2; font-family: inherit; opacity: 0.9; text-align: center; }
         
@@ -266,8 +220,6 @@
 </head>
 <body>
 
-    <button id="exitCaptureBtn" onclick="toggleCaptureMode()">FEARLESS SYSTEM 복귀 (ESC)</button>
-
     <div class="control-panel">
         <div class="panel-header">
             <h1>FEARLESS_HQ_CENTER</h1>
@@ -277,11 +229,11 @@
         <div class="control-card">
             <div class="card-label">전술 폰트 스타일 (Font)</div>
             <div class="font-grid" id="fontToggleGroup">
-                <button class="btn-font f-notoserif active" onclick="setFont('\'Noto Serif KR\', serif', this)">Noto Serif</button>
+                <button class="btn-font f-notoserif" onclick="setFont('\'Noto Serif KR\', serif', this)">Noto Serif</button>
                 <button class="btn-font f-kopub" onclick="setFont('\'KoPub Batang\', \'KoPubBatang\', serif', this)">KoPub 바탕</button>
                 <button class="btn-font f-myeongjo" onclick="setFont('\'Nanum Myeongjo\', serif', this)">나눔명조</button>
                 <button class="btn-font f-pretendard" onclick="setFont('\'Pretendard\', sans-serif', this)">Pretendard</button>
-                <button class="btn-font f-notosans" onclick="setFont('\'Noto Sans KR\', sans-serif', this)">Noto Sans</button>
+                <button class="btn-font f-notosans active" onclick="setFont('\'Noto Sans KR\', sans-serif', this)">Noto Sans</button>
                 <button class="btn-font f-gothic" onclick="setFont('\'Nanum Gothic\', sans-serif', this)">나눔고딕</button>
                 <button class="btn-font f-orbitron" onclick="setFont('\'Orbitron\', sans-serif', this)">Orbitron (Sci-Fi)</button>
             </div>
@@ -354,7 +306,6 @@
 
         <div class="action-btn-group">
             <button class="btn-secondary" id="copyBtn" onclick="copyImage()">전술 데이터 복사</button>
-            <button class="btn-secondary" onclick="toggleCaptureMode()">UI 숨김 (직접캡쳐)</button>
             <button class="btn-primary" id="saveBtn" onclick="saveImage()">로그 파일로 저장</button>
         </div>
     </div>
@@ -363,11 +314,6 @@
         <div id="capture-area-wrapper">
             <div id="capture-area">
                 <div id="text-container">
-                    <div class="text-corner-top-left"></div>
-                    <div class="text-corner-top-right"></div>
-                    <div class="text-corner-bottom-left"></div>
-                    <div class="text-corner-bottom-right"></div>
-                    
                     <div class="quote-main" id="display-main">“뼈를 삼키고, 살을 불태우며, 숨을 이어. 너에게 내일을 약속하지.”</div>
                     <div class="quote-sub" id="display-sub">
                         <span class="creator-name">응구</span> | <span class="character-name">Fearless</span>
@@ -380,25 +326,10 @@
 
     <script>
         let state = {
-            fontFamily: "'Noto Serif KR', serif",
+            fontFamily: "'Noto Sans KR', sans-serif",
             fontSize: 24, lineHeight: 1.5, letterSpacing: 0, 
             textAlign: 'center', wordBreak: 'keep-all', paddingTopBottom: 100, paddingLeftRight: 100
         };
-
-        // 직접 캡쳐 모드 (UI 숨기기)
-        function toggleCaptureMode() {
-            document.body.classList.toggle('capture-mode');
-            
-            // 캡쳐 모드로 진입 시 윈도우 크기에 맞춰 리사이징 트리거
-            setTimeout(resizeCanvas, 50); 
-        }
-
-        // ESC 키로 캡쳐 모드 빠져나오기
-        window.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && document.body.classList.contains('capture-mode')) {
-                toggleCaptureMode();
-            }
-        });
 
         function resizeCanvas() {
             const wrapper = document.getElementById('capture-area-wrapper');
@@ -519,7 +450,6 @@
             const originalTransform = area.style.transform;
             const wrapper = document.getElementById('capture-area-wrapper');
             
-            // 캡쳐 시 테두리 제거
             wrapper.style.border = 'none';
             area.style.transform = 'scale(1)';
             
@@ -530,7 +460,6 @@
                     link.href = canvas.toDataURL();
                     link.click();
                     
-                    // 상태 복원
                     area.style.transform = originalTransform;
                     wrapper.style.border = '1px solid rgba(0, 242, 255, 0)'; 
                     btn.textContent = originalText; btn.disabled = false;
@@ -548,7 +477,6 @@
             const originalTransform = area.style.transform;
             const wrapper = document.getElementById('capture-area-wrapper');
             
-            // 캡쳐 시 테두리 제거
             wrapper.style.border = 'none';
             area.style.transform = 'scale(1)';
             
@@ -569,7 +497,6 @@
                             btn.textContent = originalText; btn.disabled = false;
                         }
                         
-                        // 상태 복원
                         area.style.transform = originalTransform;
                         wrapper.style.border = '1px solid rgba(0, 242, 255, 0)'; 
                     }, 'image/png');
