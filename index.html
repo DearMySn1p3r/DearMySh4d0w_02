@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FEARLESS_MISSION_SYSTEM_v10.1</title>
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Noto+Sans+KR:wght@300;400;700;900&family=Noto+Serif+KR:wght@300;400;700&family=Nanum+Myeongjo:wght@400;700&family=Nanum+Gothic:wght@400;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Noto+Sans+KR:wght@300;700&family=Noto+Serif+KR:wght@300;700&family=Nanum+Myeongjo:wght@400;700&family=Nanum+Gothic:wght@400;700&display=swap">
     <style>
         @import url('https://cdn.jsdelivr.net/font-kopub/1.0/kopubbatang.css');
 
@@ -32,7 +32,7 @@
         ::-webkit-scrollbar-thumb { background: var(--neon-blue); }
 
         body {
-            font-family: var(--font-main);
+            font-family: 'Noto Sans KR', 'Pretendard', sans-serif;
             background-color: var(--bg-body);
             color: var(--text-main);
             margin: 0;
@@ -47,6 +47,43 @@
             transition: 0.3s;
             overflow-x: hidden;
             cursor: crosshair; /* SF 분위기 */
+        }
+
+        /* ----------------------------------
+           직접 캡쳐 모드 (UI 숨김)
+        ----------------------------------- */
+        body.capture-mode .control-panel {
+            display: none !important;
+        }
+        
+        body.capture-mode {
+            align-items: center; /* 세로 중앙 정렬 */
+            padding: 0;
+        }
+
+        #exitCaptureBtn {
+            display: none;
+            position: fixed;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 9999;
+            padding: 12px 24px;
+            background: var(--danger-red);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255, 62, 62, 0.4);
+            font-family: 'Noto Sans KR', sans-serif;
+            transition: 0.2s;
+            font-size: 14px;
+        }
+        #exitCaptureBtn:hover { background: #ff6b81; transform: translateX(-50%) translateY(-2px); }
+        
+        body.capture-mode #exitCaptureBtn {
+            display: block;
         }
 
         /* ----------------------------------
@@ -161,11 +198,11 @@
         }
         .btn-action-small:hover { background: var(--active-bg); color: var(--active-text); border-color: var(--active-bg); }
 
-        /* 저장/복사 버튼 그룹 */
+        /* 저장/복사/수동캡쳐 버튼 그룹 */
         .action-btn-group { display: flex; gap: 8px; margin-top: 10px; }
         .btn-primary, .btn-secondary {
-            padding: 16px 10px; border-radius: 10px; font-weight: 700; font-size: 0.95rem; cursor: pointer;
-            font-family: 'Orbitron', 'Noto Sans KR', sans-serif; letter-spacing: 1px; transition: 0.2s;
+            padding: 14px 10px; border-radius: 10px; font-weight: 700; font-size: 0.9rem; cursor: pointer;
+            font-family: var(--font-main); letter-spacing: 1px; transition: 0.2s;
         }
         .btn-primary {
             flex: 1.5; background: var(--active-bg); color: var(--active-text); border: none; box-shadow: 0 0 15px rgba(0, 242, 255, 0.3);
@@ -192,7 +229,14 @@
         #capture-area-wrapper {
             width: 100%; aspect-ratio: 1 / 1; position: relative;
             box-shadow: 0 15px 40px rgba(0,0,0,0.5); border-radius: 8px; overflow: hidden; background: #000;
-            border: 1px solid rgba(0, 242, 255, 0); 
+            border: 1px solid rgba(0, 242, 255, 0); /* 캡쳐 시 테두리 제거를 위해 0으로 시작 */
+        }
+        
+        /* 스캔라인 Overlay */
+        #capture-area-wrapper::after {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: repeating-linear-gradient(0deg, rgba(0, 242, 255, 0.03) 0px, rgba(0, 242, 255, 0.03) 1px, transparent 1px, transparent 3px);
+            pointer-events: none; z-index: 10;
         }
 
         #capture-area {
@@ -205,20 +249,33 @@
 
         #text-container { width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 2; position: relative; }
         
-        /* 발췌 글 볼드 처리 제거 (font-weight: 400 고정) */
-        .quote-main { width: 100%; transition: 0.1s; color: #fff; font-size: 24px; line-height: 1.5; font-family: 'Noto Sans KR', sans-serif; text-align: center; word-break: keep-all; letter-spacing: 0px; white-space: pre-wrap; font-weight: 400; text-shadow: 0 0 10px rgba(255, 255, 255, 0.1); }
+        /* 스크린 테두리 코너 데코 (캡쳐 영역 내부) */
+        .text-corner-top-left, .text-corner-top-right, .text-corner-bottom-left, .text-corner-bottom-right {
+            position: absolute; width: 15px; height: 15px; border: 2px solid var(--neon-blue); opacity: 0.6; z-index: 5;
+        }
+        .text-corner-top-left { top: -20px; left: -20px; border-right: none; border-bottom: none; }
+        .text-corner-top-right { top: -20px; right: -20px; border-left: none; border-bottom: none; }
+        .text-corner-bottom-left { bottom: -20px; left: -20px; border-right: none; border-top: none; }
+        .text-corner-bottom-right { bottom: -20px; right: -20px; border-left: none; border-top: none; }
+
+        /* [수정] 발췌 글 볼드 처리 제거 (font-weight: 400), 네온 효과 제거, 폰트 Noto Sans로 고정 */
+        .quote-main { width: 100%; transition: 0.1s; color: #fff; font-size: 24px; line-height: 1.5; font-family: 'Noto Sans KR', sans-serif; text-align: center; word-break: keep-all; letter-spacing: 0px; white-space: pre-wrap; font-weight: 400; text-shadow: none; }
         
         .quote-sub { width: 100%; margin-top: 30px; font-size: 18px; z-index: 2; font-family: inherit; opacity: 0.9; text-align: center; }
         
         .creator-name { font-weight: 300; }
         .character-name { font-weight: 700; color: var(--neon-blue); text-shadow: 0 0 10px rgba(0, 242, 255, 0.4); }
-        .symbol-logo { position: absolute; bottom: 40px; right: 40px; width: 80px; opacity: 0.9; z-index: 2; filter: drop-shadow(0 0 5px rgba(0, 242, 255, 0.3)); }
+        
+        /* [수정] 로고 홀로그램 처리 제거 */
+        .symbol-logo { position: absolute; bottom: 40px; right: 40px; width: 80px; opacity: 0.9; z-index: 2; }
         
         @media (max-width: 900px) { .preview-area { position: relative; top: 0; } }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
+
+    <button id="exitCaptureBtn">FEARLESS SYSTEM 복귀 (ESC)</button>
 
     <div class="control-panel">
         <div class="panel-header">
@@ -243,7 +300,7 @@
             <div class="card-label">배경 작전 코드 (Theme)</div>
             <select id="themeSelect" onchange="updateTheme()">
                 <option value="「Fearless」 Quote Black Ver.png" data-color="#ffffff" data-logo="「Fearless」 Symbol Logo White Ver.png" selected>🖤 [NIGHT_OPERATIONS] Tactical Dark</option>
-                <option value="「Fearless」 Quote White Ver.png" data-color="#1a1a1a" data-logo="「Fearless」 Symbol Logo Black Ver.png">🤍 [DAY_BREAK] Tactical Light</option>
+                <option value="Wait/Break/TacLight Ver.png" data-color="#1a1a1a" data-logo="「Fearless」 Symbol Logo Black Ver.png">🤍 [DAY_BREAK] Tactical Light</option>
             </select>
         </div>
 
@@ -306,6 +363,7 @@
 
         <div class="action-btn-group">
             <button class="btn-secondary" id="copyBtn" onclick="copyImage()">전술 데이터 복사</button>
+            <button class="btn-secondary" onclick="toggleCaptureMode()">UI 숨김 (직접캡쳐)</button>
             <button class="btn-primary" id="saveBtn" onclick="saveImage()">로그 파일로 저장</button>
         </div>
     </div>
@@ -314,6 +372,11 @@
         <div id="capture-area-wrapper">
             <div id="capture-area">
                 <div id="text-container">
+                    <div class="text-corner-top-left"></div>
+                    <div class="text-corner-top-right"></div>
+                    <div class="text-corner-bottom-left"></div>
+                    <div class="text-corner-bottom-right"></div>
+                    
                     <div class="quote-main" id="display-main">“뼈를 삼키고, 살을 불태우며, 숨을 이어. 너에게 내일을 약속하지.”</div>
                     <div class="quote-sub" id="display-sub">
                         <span class="creator-name">응구</span> | <span class="character-name">Fearless</span>
@@ -325,43 +388,81 @@
     </div>
 
     <script>
-        let state = {
+        // 전역 상태 설정
+        window.state = {
             fontFamily: "'Noto Sans KR', sans-serif",
             fontSize: 24, lineHeight: 1.5, letterSpacing: 0, 
             textAlign: 'center', wordBreak: 'keep-all', paddingTopBottom: 100, paddingLeftRight: 100
         };
 
+        // 직접 캡쳐 모드 (UI 숨기기)
+        function toggleCaptureMode() {
+            document.body.classList.toggle('capture-mode');
+            
+            // 캡쳐 모드로 진입 시 윈도우 크기에 맞춰 리사이징 트리거
+            setTimeout(resizeCanvas, 50); 
+        }
+
+        // ESC 키로 캡쳐 모드 빠져나오기
+        window.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && document.body.classList.contains('capture-mode')) {
+                toggleCaptureMode();
+            }
+        });
+
+        // 완벽한 반응형 캔버스 스케일링
         function resizeCanvas() {
             const wrapper = document.getElementById('capture-area-wrapper');
             const area = document.getElementById('capture-area');
             if(wrapper && area) {
-                const scale = wrapper.clientWidth / 700;
+                const rect = wrapper.getBoundingClientRect();
+                const scale = rect.width / 700;
                 area.style.transform = `scale(${scale})`;
             }
         }
-        window.addEventListener('resize', resizeCanvas);
-        setTimeout(resizeCanvas, 100);
+        
+        window.addEventListener('DOMContentLoaded', () => {
+            const wrapper = document.getElementById('capture-area-wrapper');
+            if(wrapper) {
+                const ro = new ResizeObserver(() => applyScale());
+                ro.observe(wrapper);
+            }
+            applyScale();
+        });
 
-        function setFont(fontValue, btn) {
-            state.fontFamily = fontValue;
+        function applyScale() {
+            const wrapper = document.getElementById('capture-area-wrapper');
+            const area = document.getElementById('capture-area');
+            if(wrapper && area) {
+                const rect = wrapper.getBoundingClientRect();
+                const scale = rect.width / 700;
+                area.style.transform = `scale(${scale})`;
+            }
+        }
+
+        // 폰트 설정
+        window.setFont = function(fontValue, btn) {
+            window.state.fontFamily = fontValue;
             const group = document.getElementById('fontToggleGroup');
             group.querySelectorAll('.btn-font').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             updateStyle();
-        }
+        };
 
-        function adjust(key, val) {
-            state[key] = parseFloat((state[key] + val).toFixed(1));
-            if(key !== 'letterSpacing' && state[key] < 0) state[key] = 0; 
+        // 수치 조절
+        window.adjust = function(key, val) {
+            window.state[key] = parseFloat((window.state[key] + val).toFixed(1));
+            if(key !== 'letterSpacing' && window.state[key] < 0) window.state[key] = 0; 
             const displayEl = document.getElementById(`val-${key}`);
             if(displayEl){
                 let unit = key === 'lineHeight' ? 'x' : 'px';
-                displayEl.innerHTML = state[key] + `<span class="unit">${unit}</span>`;
+                displayEl.innerHTML = window.state[key] + `<span class="unit">${unit}</span>`;
             }
             updateStyle();
-        }
+        };
 
-        function toggleQuotes() {
+        // 따옴표 스마트 변환
+        window.toggleQuotes = function() {
             const textarea = document.getElementById('mainInput');
             let text = textarea.value;
             const hasStraight = /['"]/.test(text);
@@ -376,23 +477,23 @@
             }
             textarea.value = text;
             updateText();
-        }
+        };
 
-        function setAlign(value, btn) {
-            state.textAlign = value;
+        window.setAlign = function(value, btn) {
+            window.state.textAlign = value;
             const group = document.getElementById('alignToggleGroup');
             group.querySelectorAll('.btn-toggle').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             updateStyle();
-        }
+        };
 
-        function setWrap(value, btn) {
-            state.wordBreak = value;
+        window.setWrap = function(value, btn) {
+            window.state.wordBreak = value;
             const group = document.getElementById('wrapToggleGroup');
             group.querySelectorAll('.btn-toggle').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             updateStyle();
-        }
+        };
 
         function updateStyle() {
             const main = document.getElementById('display-main');
@@ -400,33 +501,34 @@
             const area = document.getElementById('capture-area');
             const textContainer = document.getElementById('text-container');
             
-            main.style.fontFamily = state.fontFamily;
-            sub.style.fontFamily = state.fontFamily;
+            // [수정] 폰트 스타일 Noto Sans로 고정
+            main.style.fontFamily = "'Noto Sans KR', sans-serif";
+            sub.style.fontFamily = "'Noto Sans KR', sans-serif";
             
-            main.style.fontSize = state.fontSize + 'px';
-            main.style.lineHeight = state.lineHeight;
-            main.style.letterSpacing = state.letterSpacing + 'px';
-            main.style.textAlign = state.textAlign;
-            main.style.wordBreak = state.wordBreak;
+            main.style.fontSize = window.state.fontSize + 'px';
+            main.style.lineHeight = window.state.lineHeight;
+            main.style.letterSpacing = window.state.letterSpacing + 'px';
+            main.style.textAlign = window.state.textAlign;
+            main.style.wordBreak = window.state.wordBreak;
 
-            sub.style.textAlign = state.textAlign;
-            sub.style.letterSpacing = state.letterSpacing + 'px';
+            sub.style.textAlign = window.state.textAlign;
+            sub.style.letterSpacing = window.state.letterSpacing + 'px';
             
-            area.style.padding = `${state.paddingTopBottom}px ${state.paddingLeftRight}px`;
+            area.style.padding = `${window.state.paddingTopBottom}px ${window.state.paddingLeftRight}px`;
             
-            if(state.textAlign === 'left') textContainer.style.alignItems = 'flex-start';
-            else if(state.textAlign === 'right') textContainer.style.alignItems = 'flex-end';
+            if(window.state.textAlign === 'left') textContainer.style.alignItems = 'flex-start';
+            else if(window.state.textAlign === 'right') textContainer.style.alignItems = 'flex-end';
             else textContainer.style.alignItems = 'center';
         }
 
-        function updateText() {
+        window.updateText = function() {
             document.getElementById('display-main').textContent = document.getElementById('mainInput').value;
             const creator = document.getElementById('creatorInput').value;
             const character = document.getElementById('characterInput').value;
             document.getElementById('display-sub').innerHTML = `<span class="creator-name">${creator}</span> | <span class="character-name">${character}</span>`;
-        }
+        };
 
-        function updateTheme() {
+        window.updateTheme = function() {
             const select = document.getElementById('themeSelect');
             const selectedOption = select.options[select.selectedIndex];
             
@@ -438,72 +540,78 @@
             document.getElementById('display-main').style.color = color;
             document.getElementById('display-sub').style.color = color;
             document.getElementById('logoDisplay').src = logo;
-        }
+        };
 
-        // 이미지 파일 다운로드
-        function saveImage() {
+        window.saveImage = function() {
             const btn = document.getElementById('saveBtn');
             const originalText = btn.textContent;
             btn.textContent = "생성 중..."; btn.disabled = true;
 
             const area = document.getElementById('capture-area');
-            const originalTransform = area.style.transform;
-            const wrapper = document.getElementById('capture-area-wrapper');
             
-            wrapper.style.border = 'none';
-            area.style.transform = 'scale(1)';
-            
-            setTimeout(() => {
-                html2canvas(area, { scale: 2, useCORS: true, backgroundColor: null }).then(canvas => {
-                    const link = document.createElement('a');
-                    link.download = `FEARLESS_TACTICAL_LOG_${Date.now()}.png`;
-                    link.href = canvas.toDataURL();
-                    link.click();
-                    
-                    area.style.transform = originalTransform;
-                    wrapper.style.border = '1px solid rgba(0, 242, 255, 0)'; 
-                    btn.textContent = originalText; btn.disabled = false;
-                });
-            }, 100);
-        }
+            html2canvas(area, { 
+                scale: 2, 
+                useCORS: true, 
+                backgroundColor: null,
+                onclone: function(clonedDoc) {
+                    clonedDoc.getElementById('capture-area').style.transform = 'scale(1)';
+                    // [수정] 캡쳐 로그에서 홀로그램 로고로 변경하던 부분 제거
+                }
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = `FEARLESS_TACTICAL_LOG_${Date.now()}.png`;
+                link.href = canvas.toDataURL();
+                link.click();
+                btn.textContent = originalText; btn.disabled = false;
+            }).catch(err => {
+                alert("저장 실패");
+                btn.textContent = originalText; btn.disabled = false;
+            });
+        };
 
-        // 이미지 클립보드 복사
-        function copyImage() {
+        window.copyImage = function() {
             const btn = document.getElementById('copyBtn');
             const originalText = btn.textContent;
             btn.textContent = "복사 중..."; btn.disabled = true;
 
             const area = document.getElementById('capture-area');
-            const originalTransform = area.style.transform;
-            const wrapper = document.getElementById('capture-area-wrapper');
             
-            wrapper.style.border = 'none';
-            area.style.transform = 'scale(1)';
-            
-            setTimeout(() => {
-                html2canvas(area, { scale: 2, useCORS: true, backgroundColor: null }).then(canvas => {
-                    canvas.toBlob(blob => {
-                        try {
-                            const item = new ClipboardItem({ 'image/png': blob });
-                            navigator.clipboard.write([item]).then(() => {
-                                btn.textContent = "복사 완료!";
-                                setTimeout(() => { btn.textContent = originalText; btn.disabled = false; }, 2000);
-                            }).catch(err => {
-                                alert("이 브라우저/환경에서는 클립보드 이미지 복사를 지원하지 않습니다. (https 환경 필요)");
-                                btn.textContent = originalText; btn.disabled = false;
-                            });
-                        } catch(e) {
-                            alert("클립보드 API를 지원하지 않는 브라우저입니다.");
+            html2canvas(area, { 
+                scale: 2, 
+                useCORS: true, 
+                backgroundColor: null,
+                onclone: function(clonedDoc) {
+                    clonedDoc.getElementById('capture-area').style.transform = 'scale(1)';
+                    // [수정] 클립보드 복사 시 홀로그램 로고로 변경하던 부분 제거
+                }
+            }).then(canvas => {
+                canvas.toBlob(blob => {
+                    if(!blob) {
+                        alert("복사 오류가 발생했습니다.");
+                        btn.textContent = originalText; btn.disabled = false;
+                        return;
+                    }
+                    try {
+                        const item = new ClipboardItem({ 'image/png': blob });
+                        navigator.clipboard.write([item]).then(() => {
+                            btn.textContent = "복사 완료!";
+                            setTimeout(() => { btn.textContent = originalText; btn.disabled = false; }, 2000);
+                        }).catch(err => {
+                            alert("이 환경에서는 복사를 지원하지 않습니다. 파일 저장을 이용해주세요.");
                             btn.textContent = originalText; btn.disabled = false;
-                        }
-                        
-                        area.style.transform = originalTransform;
-                        wrapper.style.border = '1px solid rgba(0, 242, 255, 0)'; 
-                    }, 'image/png');
-                });
-            }, 100);
-        }
+                        });
+                    } catch(e) {
+                        alert("클립보드 API 미지원 환경입니다.");
+                        btn.textContent = originalText; btn.disabled = false;
+                    }
+                }, 'image/png');
+            }).catch(err => {
+                alert("복사 실패");
+                btn.textContent = originalText; btn.disabled = false;
+            });
+        };
 
+        // 초기 실행
         updateStyle(); updateTheme(); updateText();
     </script>
 </body>
